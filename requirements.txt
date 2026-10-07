@@ -1,0 +1,18 @@
+# Core app
+Flask>=3.0
+pandas>=2.0
+pdfplumber>=0.11
+matplotlib>=3.8
+
+# Local LLM
+ollama>=0.3
+
+# RAG / LangChain stack (optional -- app.py falls back to a simpler prompt-based
+# chat and skips categorization if these aren't installed or Ollama's
+# embedding model isn't pulled; see README's "AI Engineering Highlights"
+# section for what each piece is for)
+langchain-core>=0.3
+langchain-ollama>=0.2
+langchain-chroma>=0.1
+chromadb>=0.5
+pydantic>=2.0

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ledger — Statement Analysis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+
+  <div class="page">
+
+    <header class="masthead">
+      <div class="masthead-mark">Ledger</div>
+      <p class="masthead-tag">Read your statement without reading every line.</p>
+    </header>
+
+    <!-- ============== UPLOAD STATE ============== -->
+    <section id="upload-view" class="upload-view">
+      <form id="upload-form">
+        <label for="file-input" id="dropzone" class="dropzone">
+          <div class="dropzone-inner">
+            <p class="dropzone-title">Drop a bank statement PDF here</p>
+            <p class="dropzone-sub">or click to choose a file — nothing leaves your machine</p>
+            <p id="file-chosen" class="file-chosen"></p>
+          </div>
+          <input id="file-input" type="file" accept="application/pdf" hidden />
+        </label>
+        <button id="analyze-btn" type="submit" class="btn-primary" disabled>Analyze statement</button>
+      </form>
+
+      <div id="loading" class="loading hidden">
+        <div class="spinner" aria-hidden="true"></div>
+        <p id="loading-text">Reading your statement…</p>
+      </div>
+
+      <div id="error-box" class="error-box hidden"></div>
+    </section>
+
+    <!-- ============== RESULTS STATE ============== -->
+    <section id="results-view" class="results-view hidden">
+
+      <div class="results-topbar">
+        <div>
+          <h2 id="result-filename" class="result-filename"></h2>
+          <p id="result-period" class="result-period"></p>
+        </div>
+        <button id="new-upload-btn" class="btn-secondary" type="button">Analyze another statement</button>
+      </div>
+
+      <div id="flag-banner" class="flag-banner hidden"></div>
+
+      <section class="stat-row" aria-label="Summary">
+        <div class="stat">
+          <span class="stat-label">Income</span>
+          <span id="stat-income" class="stat-value income">—</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Expenses</span>
+          <span id="stat-expense" class="stat-value expense">—</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Net change</span>
+          <span id="stat-net" class="stat-value">—</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Transactions</span>
+          <span id="stat-count" class="stat-value">—</span>
+        </div>
+      </section>
+
+      <section id="insights-card" class="insights-card hidden">
+        <h3>A note on this statement</h3>
+        <p id="insights-text"></p>
+      </section>
+      <div id="insights-error" class="insights-error hidden"></div>
+
+      <section class="chart-grid">
+        <div class="chart-card">
+          <h3>Income vs expenses by month</h3>
+          <canvas id="chart-monthly"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Balance over time</h3>
+          <canvas id="chart-balance"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Largest expenses</h3>
+          <canvas id="chart-top-expenses"></canvas>
+        </div>
+        <div class="chart-card">
+          <h3>Daily net cash flow</h3>
+          <canvas id="chart-daily-net"></canvas>
+        </div>
+        <div id="category-chart-card" class="chart-card hidden">
+          <h3>Spending by category</h3>
+          <canvas id="chart-category"></canvas>
+        </div>
+      </section>
+
+      <section class="register">
+        <h3>Transactions</h3>
+        <div class="register-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th class="num">Withdrawal</th>
+                <th class="num">Deposit</th>
+                <th class="num">Balance</th>
+              </tr>
+            </thead>
+            <tbody id="transactions-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="chat-section">
+        <h3>Ask about this statement</h3>
+        <div id="chat-log" class="chat-log"></div>
+        <form id="chat-form" class="chat-form">
+          <input id="chat-input" type="text" placeholder="e.g. How much did I spend on rent?" autocomplete="off" />
+          <button type="submit" class="btn-primary">Ask</button>
+        </form>
+      </section>
+
+    </section>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
